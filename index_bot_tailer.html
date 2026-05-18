@@ -1,33 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { font-family: sans-serif; background: var(--tg-theme-bg-color, #fff); color: var(--tg-theme-text-color, #000); padding: 20px; text-align: center; }
-        input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; }
-        button { background: var(--tg-theme-button-color, #3390ec); color: var(--tg-theme-button-text-color, #fff); border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; width: 100%; cursor: pointer; margin: 5px 0; }
+        body { font-family: -apple-system, sans-serif; background: var(--tg-theme-bg-color, #fff); color: var(--tg-theme-text-color, #000); padding: 20px; text-align: center; margin: 0; }
+        .container { max-width: 400px; margin: 0 auto; }
+        h1 { font-size: 24px; margin-bottom: 10px; }
+        input { width: 100%; padding: 14px; margin: 12px 0; border: 2px solid #ddd; border-radius: 12px; font-size: 16px; box-sizing: border-box; background: var(--tg-theme-secondary-bg-color, #f5f5f5); color: inherit; }
+        input:focus { outline: none; border-color: var(--tg-theme-button-color, #3390ec); }
+        button { background: var(--tg-theme-button-color, #3390ec); color: var(--tg-theme-button-text-color, #fff); border: none; padding: 14px 20px; border-radius: 12px; font-size: 16px; font-weight: 600; width: 100%; margin: 6px 0; cursor: pointer; transition: opacity 0.2s; }
+        button:active { opacity: 0.9; }
+        .status { margin-top: 20px; font-size: 14px; color: var(--tg-theme-hint-color, #999); }
     </style>
 </head>
 <body>
-    <h2>🛡️ Панель</h2>
-    <input type="number" id="cid" placeholder="ID чата (-100...)">
-    <button onclick="send('settings')">⚙️ Настройки</button>
-    <button onclick="send('bans')">📋 Баны</button>
-    <button onclick="send('combo')">🔗 Комбо</button>
+    <div class="container">
+        <h1>🛡️ Admin Panel</h1>
+        <p>Управление модерацией</p>
+        
+        <input type="number" id="chatId" placeholder="ID чата (например -100...)">
+        
+        <button onclick="send('settings')">⚙️ Настройки</button>
+        <button onclick="send('bans')">📋 Баны</button>
+        <button onclick="send('combo')">🔗 Комбо</button>
+        
+        <div class="status" id="status">Готов к работе</div>
+    </div>
 
     <script>
         const tg = window.Telegram.WebApp;
         tg.ready();
-        
+        tg.expand();
+
         function send(action) {
-            const cid = document.getElementById('cid').value;
-            if(!cid) return tg.showAlert("Введи ID чата!");
-            // Отправляем данные боту
+            const cid = document.getElementById('chatId').value.trim();
+            const status = document.getElementById('status');
+            
+            if (!cid || !/^-?\d+$/.test(cid)) {
+                tg.showAlert("⚠️ Введите корректный ID чата!");
+                status.textContent = "❌ Ошибка: неверный ID";
+                return;
+            }
+            
+            status.textContent = `📤 Отправка: ${action} → ${cid}`;
             tg.sendData(action + "|" + cid);
-            tg.close();
+            
+            setTimeout(() => {
+                tg.close();
+            }, 300);
         }
     </script>
 </body>

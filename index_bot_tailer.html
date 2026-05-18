@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🛡️ Admin Panel</title>
+    <!-- Скрипт Telegram WebApp -->
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        body { 
+            font-family: sans-serif; 
+            background: var(--tg-theme-bg-color); 
+            color: var(--tg-theme-text-color); 
+            padding: 20px; 
+            text-align: center; 
+        }
+        input { 
+            width: 100%; padding: 12px; margin-bottom: 15px; 
+            border-radius: 10px; border: 1px solid #ccc; 
+            background: var(--tg-theme-secondary-bg-color);
+            color: var(--tg-theme-text-color);
+            font-size: 16px;
+        }
+        .btn {
+            background: var(--tg-theme-button-color); 
+            color: var(--tg-theme-button-text-color);
+            border: none; padding: 15px; width: 100%; 
+            border-radius: 10px; font-size: 16px; font-weight: bold; 
+            margin-bottom: 10px; cursor: pointer;
+        }
+        .btn:active { opacity: 0.8; }
+    </style>
+</head>
+<body>
+    <h1>🛡️ Панель Модератора</h1>
+    <p>Управление чатами</p>
+
+    <input type="number" id="chatId" placeholder="Введите ID чата (-100...)">
+
+    <button class="btn" onclick="sendAction('settings')">️ Настройки чата</button>
+    <button class="btn" onclick="sendAction('bans')">📋 Показать баны</button>
+    <button class="btn" onclick="sendAction('combo')">🔗 Настроить Комбо</button>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.ready(); // Сообщаем телеграму, что приложение готово
+
+        function sendAction(action) {
+            const chatId = document.getElementById('chatId').value;
+            
+            if (!chatId) {
+                tg.showAlert("Пожалуйста, введите ID чата!");
+                return;
+            }
+
+            // Отправляем данные боту
+            // Формат: "settings|12345"
+            tg.sendData(action + "|" + chatId);
+            tg.close(); // Закрываем окно после отправки
+        }
+    </script>
+</body>
+</html>

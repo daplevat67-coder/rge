@@ -1,62 +1,33 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🛡️ Admin Panel</title>
-    <!-- Скрипт Telegram WebApp -->
+    <title>Admin Panel</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        body { 
-            font-family: sans-serif; 
-            background: var(--tg-theme-bg-color); 
-            color: var(--tg-theme-text-color); 
-            padding: 20px; 
-            text-align: center; 
-        }
-        input { 
-            width: 100%; padding: 12px; margin-bottom: 15px; 
-            border-radius: 10px; border: 1px solid #ccc; 
-            background: var(--tg-theme-secondary-bg-color);
-            color: var(--tg-theme-text-color);
-            font-size: 16px;
-        }
-        .btn {
-            background: var(--tg-theme-button-color); 
-            color: var(--tg-theme-button-text-color);
-            border: none; padding: 15px; width: 100%; 
-            border-radius: 10px; font-size: 16px; font-weight: bold; 
-            margin-bottom: 10px; cursor: pointer;
-        }
-        .btn:active { opacity: 0.8; }
+        body { font-family: sans-serif; background: var(--tg-theme-bg-color, #fff); color: var(--tg-theme-text-color, #000); padding: 20px; text-align: center; }
+        input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; }
+        button { background: var(--tg-theme-button-color, #3390ec); color: var(--tg-theme-button-text-color, #fff); border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; width: 100%; cursor: pointer; margin: 5px 0; }
     </style>
 </head>
 <body>
-    <h1>🛡️ Панель Модератора</h1>
-    <p>Управление чатами</p>
-
-    <input type="number" id="chatId" placeholder="Введите ID чата (-100...)">
-
-    <button class="btn" onclick="sendAction('settings')">️ Настройки чата</button>
-    <button class="btn" onclick="sendAction('bans')">📋 Показать баны</button>
-    <button class="btn" onclick="sendAction('combo')">🔗 Настроить Комбо</button>
+    <h2>🛡️ Панель</h2>
+    <input type="number" id="cid" placeholder="ID чата (-100...)">
+    <button onclick="send('settings')">⚙️ Настройки</button>
+    <button onclick="send('bans')">📋 Баны</button>
+    <button onclick="send('combo')">🔗 Комбо</button>
 
     <script>
         const tg = window.Telegram.WebApp;
-        tg.ready(); // Сообщаем телеграму, что приложение готово
-
-        function sendAction(action) {
-            const chatId = document.getElementById('chatId').value;
-            
-            if (!chatId) {
-                tg.showAlert("Пожалуйста, введите ID чата!");
-                return;
-            }
-
+        tg.ready();
+        
+        function send(action) {
+            const cid = document.getElementById('cid').value;
+            if(!cid) return tg.showAlert("Введи ID чата!");
             // Отправляем данные боту
-            // Формат: "settings|12345"
-            tg.sendData(action + "|" + chatId);
-            tg.close(); // Закрываем окно после отправки
+            tg.sendData(action + "|" + cid);
+            tg.close();
         }
     </script>
 </body>
